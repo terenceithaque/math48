@@ -1,0 +1,1 @@
+math48 est une implémentation en ligne de commandes du jeu de 2048, avec des expressions mathématiques en plus des nombres réguliers.
