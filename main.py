@@ -2,6 +2,9 @@
 import math # Importer le module math de Python
 from random import randint # Importer la fonction randint du module random
 
+
+directions = ["haut", "bas", "gauche", "droite"] # Liste des directions dans lesquelles le joueur peut déplacer les tuiles
+
 # Grille du jeu
 grille = [[0,0,0,0],
           [0,0,0,0],
