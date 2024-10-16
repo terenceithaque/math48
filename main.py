@@ -1,7 +1,7 @@
 "Script principal du jeu"
 import math # Importer le module math de Python
 from random import randint # Importer la fonction randint du module random
-
+from expression import *  # Importer le fichier local expression.py pour pouvoir créer des expressions mathématiques
 
 directions = ["haut", "bas", "gauche", "droite"] # Liste des directions dans lesquelles le joueur peut déplacer les tuiles
 
@@ -19,6 +19,17 @@ dict_signes = {
 }
 
 
+def grille_pleine():
+    "Vérifier si la grille de jeu est pleine"
+    lignes_pleines = 0 # Nombre de lignes pleines (sans cases dont le contenu vaut 0)
+    for ligne in grille:
+        if not 0 in ligne: # Si il n'y a aucune case libre (dont le contenu vaut 0) dans la ligne
+            lignes_pleines += 1 # Augmenter le nombre de lignes pleines de 1
+
+    return lignes_pleines == len(grille) # On vérifie si le nombre de lignes pleines correspond au nombre de lignes dans la grille, auquel cas on renvoie True, sinon False       
+
+
+
 def tirer_nombre():
     "Tire un nombre au hasard, 2 ou 4"
     probabilite4 = randint(0, 100) # Probabilité qu'un 4 soit tiré, en %
@@ -31,13 +42,14 @@ def tirer_nombre():
 
 
 
-def generer_expression(nombres=[2]):
-    """Générer une expression mathématique avec un ou plusieurs nombre
-       - nombres: liste des nombres appartenant à l'expression"""
+expression = Expression(longueur_min=3, longueur_max=7)
+print(expression.valeur)    
 
-    pass   
+if grille_pleine():
+    print(f"La grille {grille} est pleine")
 
-print(tirer_nombre())        
+else:
+    print(f"La grille {grille} n'est pas pleine.")    
 
 
 
