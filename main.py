@@ -11,12 +11,7 @@ grille = [[0,0,0,0],
           [0,0,0,0],
           [0,0,0,0]] 
 
-# dict_signes est un dictionnaire qui associe des noms de fonctions à des symboles mathématiques
-dict_signes = {
-    "√": math.sqrt,
-    "|x|": abs,
 
-}
 
 
 def grille_pleine():
@@ -43,13 +38,14 @@ def tirer_nombre():
 
 
 expression = Expression(longueur_min=3, longueur_max=7)
-print(expression.valeur)    
+print(expression.valeur)  
 
+"""
 if grille_pleine():
     print(f"La grille {grille} est pleine")
 
 else:
     print(f"La grille {grille} n'est pas pleine.")    
-
+"""
 
 
