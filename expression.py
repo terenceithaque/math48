@@ -26,7 +26,11 @@ def choisir_nombre(max=2048):
     - max: Nombre maximal, un entier."""
 
     assert type(max).__name__ == "int", "max doit être un nombre entier." # Vérifier si max est un nombre entier, et si ce n'est pas le cas, afficher une erreur dans la console.
-    nombre = randint(2, max) # Choisir entre 2 et 4096
+    nombre = randint(2, max) # Choisir un nombre entre 2 et le maximum indiqué
+
+    while nombre % 2 > 0 or max % nombre > 0: # Tant que le reste de la division du nombre par 2 est supérieur à zéro ou que le reste de la division du max par le nombre est supérieur à zéro
+        nombre = randint(2, max) # Choisir à nouveau un nombre
+
     return nombre # Renvoyer ce nombre
 
 class Expression():
