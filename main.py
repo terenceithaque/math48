@@ -13,6 +13,28 @@ grille = [[0,0,0,0],
 
 
 
+def est_puissance(n=4, puiss=2):
+    """Renvoie un booléen en vérifiant si un nombre n est une puissance de puiss
+    n: Nombre dont on vérifie s'il est puissance
+    puiss: Puissance à comparer avec n
+    La formule utilisée est n % puiss == 0"""
+
+    assert puiss != 0, "La puissance doit être strictement positive ou négative: impossible de diviser par 0."
+
+    print(n % puiss)
+    if n % puiss == 0: # Si le reste de n divisé par pow est égal à 0, alors n est une puissance de puiss
+        return True
+
+    return False    
+
+
+
+
+
+
+
+
+
 
 def grille_pleine():
     "Vérifier si la grille de jeu est pleine"
@@ -37,8 +59,11 @@ def tirer_nombre():
 
 
 
-expression = Expression(longueur_min=3, longueur_max=7)
+expression = Expression(longueur_min=3, longueur_max=7, n_max=2048)
 print(expression.valeur)  
+
+print(est_puissance(4, 2))
+print(help(est_puissance))
 
 """
 if grille_pleine():
