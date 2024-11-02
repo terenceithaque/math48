@@ -1,10 +1,13 @@
 "expression.py permet d'instancier une classe Expression qui représente une expression mathématique"
 import math # Importer le module math
+import sympy # Importer sympy pour les symboles mathématiques spéciaux
 from random import randint, choice # Importer les fonctions nécessaires du module random
 
+
+racine = sympy.symbols("√")
 signes_expression = ["+", "-", "*", "/", "√"] # Signes pouvant être utilisés dans une expression
 
-nombres_str = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+nombres_str = [str(n) for n in range(0, 10000)]  # Liste contenant des nombres sous forme de chaîne de caractères entre 0 et 10000
 
 # dict_signes est un dictionnaire qui associe des noms de fonctions à des symboles mathématiques
 dict_signes = {
@@ -58,76 +61,87 @@ class Expression():
 
     def generer(self):
         "Générer l'expression"
-        nombre_choisi = False # Savoir si un nombre a été choisi au tour de boucle précédent
-        signe_choisi = False # Savoir si un signe a été choisi au tour de boucle précédent
+
+        generations = 0  # Nombre de générations réalisées pour l'expression
+        generations_max = 10  # Nombre maximum de générations possibles
+    
+        for i in range(1, self.longueur): # Pour toute la longueur de l'expression
+            print(f"Valeur sans espaces: '{self.valeur.strip()}'")
+            termes_generes = self.valeur.strip().split(" ") # Termes générés dans l'expressions. Ils sont séparés par des espaces
+            print(f"Termes générés : {termes_generes}")
+            probabilite_nombre = randint(1, 100) # Probabilité de choisir un nombre en %
+            probabilite_signe = randint(1, 100) # Probabilité de choisir un signe en %
 
 
-        for i in range(self.longueur): # Pour toute la longueur de l'expression
-            choix = None # Elément choisi au hasard, en fonction des probabilités tirées
-            print(f"nombre_choisi : {nombre_choisi}")
-            print(f"signe_choisi : {signe_choisi}")
-            if i == 0: # Si on est au premier terme de l'expression
-                probabilite_nombre = randint(0, 100) # Probabilité qu'un nombre soit choisi en %
-                probabilite_signe = randint(0, 100) # Probabilité qu'un signe soit choisi en %
+            while probabilite_nombre == probabilite_signe: # Tant que les probabilités sont égales
+                # Les tirer à nouveau
+                probabilite_nombre = randint(1, 100)
+                probabilite_signe = randint(1, 100)
+        
+
+            if len(termes_generes) > 0: # Si au moins un terme a été généré
+                if probabilite_nombre > probabilite_signe and not termes_generes[-1].isdigit():  # Si la probabilité de chosir un nombre est supérieure à celle de choisir un signe et que le terme précédent n'est pas un nombre
+                    choix = choisir_nombre(max=2048) # Choisir un nombre au hasard
+
+                else: # Sinon
+                    if not termes_generes[-1] in signes_expression:
+                        if i < self.longueur - 1: # Si on n'est pas au dernier terme de l'expression
+                            choix = choisir_signe() # Choisir un signe    
+
+
+            else: # Si on doit générer le premier terme
+                if probabilite_nombre > probabilite_signe: # Si la probabilité de choisir un nombre est supérieure à celle de choisir un signe
+                    choix = choisir_nombre(max=2048) # Choisir un nombre au hasard
+
+
+                else: # Sinon
+                    choix = choisir_signe(exclusions=["*", "/", "+"])   # Choisir un signe au hasard, en excluant les opérateurs *, / et + des possibilités
+
+
+
+            for signe in  ["*", "/", "+"]: # Pour chacun des signes *, / et +
+                while self.valeur.strip().startswith(signe): # Si l'expression commence par l'un de ces caractères interdits en première position
+                    if generations >= generations_max: # Si on a atteint le nombre maximum de générations possibles
+                        return self.valeur # Arrêter la fonction pour empêcher les récursions infinies
+                    
+                    else:
+                        self.valeur = self.generer()
+                        return self.valeur
+                    
+                else:
+                    break
                 
                 
-                while probabilite_nombre == probabilite_signe: # Tant que la probabilité de choisir un nombre est égale à celle de choisir un signe
-                    # Tirer de nouvelles probabilités en %
-                    probabilite_nombre = randint(0, 100) 
-                    probabilite_signe = randint(0, 100)
 
-                print(f"{probabilite_nombre} % de chances de générer un nombre")
-                print(f"{probabilite_signe} % de chances de générer un signe")
-
-                if probabilite_nombre > probabilite_signe or not nombre_choisi: # S'il y a plus de probabilités de choisir un nombre qu'un signe
-                    choix = choisir_nombre(max=self.nombre_max) # Alors on choisit un nombre
-                    nombre_choisi = True
-                    signe_choisi = False
-
-                elif probabilite_signe > probabilite_nombre or not signe_choisi or i < self.longueur - 1: # Et dans le cas inverse
-                    choix = choisir_signe(exclusions=["+", "*", "/"]) # On choisit un signe, en excluant les symboles +, * et / des possibilités
-                    signe_choisi = True
-                    nombre_choisi = False
-
-            else: # Sinon
-                probabilite_signe = 0 # Probabilité qu'un signe soit choisi, pour l'instant égale à 0
-                probabilite_nombre = randint(0, 100) # Probabilité qu'un nombre soit choisi en %
-                if i < self.longueur - 1: # On ne peut choisir un signe que si on est avant le dernier terme de l'expression
-                    probabilite_signe = randint(0, 100) # Probabilité qu'un signe soit choisi en %
-
-                while probabilite_nombre == probabilite_signe: # Tant que la probabilité de choisir un nombre est égale à celle de choisir un signe
-                    # Tirer de nouvelles probabilités en %
-                    probabilite_nombre = randint(0, 100)
-                    probabilite_signe = randint(0, 100)
-
-                print(f"{probabilite_nombre} % de chances de générer un nombre")
-                print(f"{probabilite_signe} % de chances de générer un signe")
-
-
-                if probabilite_nombre > probabilite_signe or not nombre_choisi: # S'il y a plus de probabilités de choisir un nombre qu'un signe
-                    choix = choisir_nombre(max=self.nombre_max) # Alors on choisit un nombre
-                    nombre_choisi = True
-                    signe_choisi = False
-
-                elif probabilite_signe > probabilite_nombre or not signe_choisi: # Et dans le cas inverse
-                    choix = choisir_signe() # Choisir un signe au hasard, sans préciser d'exclusions
-                    while choix in self.valeur: # Un même signe ne peut pas apparaître plus d'une fois dans l'expression
-                        choix = choisir_signe() # Si c'est le cas, choisir un signe à nouveau
-
-                    signe_choisi  = True
-                    nombre_choisi = False    
-
-
-                
             choix = str(choix) # On convertit le choix sous forme de chaîne de caractères pour éviter des problèmes de compatibilité entre les types
-            self.valeur +=  choix +  " " # Ajouter la valeur du choix (nombre ou signe) à l'expression
+            self.valeur += f"{choix} "# Ajouter la valeur du choix (nombre ou signe) à l'expression
             print(f"Valeur expr. : '{self.valeur}', choix : '{choix}'")
 
         return self.valeur  
 
     def evaluer(self):
         "Evalue l'expression"
-        pass
+        valeur_evaluable = "" # Valeur de la fonction sous sa forme évaluable
+        signes_speciaux = {"√": math.sqrt} # Ce dictionnaire regroupe les signes spéciaux d'une expression et les fonctions correspondantes
+
+        for i, terme in enumerate(self.valeur): # Pour chaque terme de l'expression
+            if not terme in signes_speciaux: # Si le terme n'est pas un signe spécial
+                valeur_evaluable += terme # Ajouter le terme en dur à l'expression sous forme évaluable
+
+            else: # Si le terme est un signe spécial
+                terme_suivant = self.valeur[i+1] # Terme suivant dans l'expression
+                if terme_suivant.strip(): # Si le terme suivant peut être transformé en entier
+                    terme = signes_speciaux[terme](terme_suivant) # Le terme actuel devient la fonction correspondante au signe spécial à laquelle on donne terme_suivant en paramètre
+
+
+            #print(f"Expression évaluable : {valeur_evaluable}")
+
+
+        return eval(valeur_evaluable)            
+                
+
+
+
 
 
 
