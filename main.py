@@ -59,9 +59,9 @@ def tirer_nombre():
 
 
 expression = Expression(longueur_min=3, longueur_max=7, n_max=2048)
-#print(expression.valeur)
+print(expression.valeur)
 
-#print(expression.evaluer())
+print(expression.evaluer())
 
 #print(est_puissance_de(4, 2))
 #print(help(est_puissance_de))
